@@ -287,18 +287,54 @@ void mostrar_productos(Nodo *head)
 // Funcion para mostrar los n productos con menor stock
 void menos_stock(Nodo *head, int n)
 {
-
-  cout << "\n\nProductos con menor stock:\n\n";
-  Nodo *actual = head;
-
-  // Imprimimos los primeros n productos de la lista
-  while (actual && n > 0)
+  if (!head)
   {
-    cout << actual->nombre << ": " << actual->cantidad << " unidades\n";
-    actual = actual->siguiente;
-    n--;
+    cout << "\n\nEl inventario está vacío.\n\n";
+    return;
   }
-  cout << "\n\n";
+
+  // Contar el numero total de productos en la lista enlazada
+  int total_productos = 0;
+  Nodo *temp = head;
+  while (temp)
+  {
+    total_productos++;
+    temp = temp->siguiente;
+  }
+
+  // Si n es mayor que el numero total de productos, ajustar n al total
+  if (n > total_productos)
+  {
+    n = total_productos;
+  }
+
+  // Ordena los productos por cantidad de stock usando una el algoritmo de burbuja
+  for (int i = 0; i < total_productos - 1; i++)
+  {
+    Nodo *actual = head;
+    Nodo *siguiente = actual->siguiente;
+    for (int j = 0; j < total_productos - i - 1; j++)
+    {
+      if (actual->cantidad > siguiente->cantidad)
+      {
+        // Intercambiaa los valores de nombre y cantidad entre actual y siguiente
+        swap(actual->nombre, siguiente->nombre);
+        swap(actual->cantidad, siguiente->cantidad);
+      }
+      actual = siguiente;
+      siguiente = siguiente->siguiente;
+    }
+  }
+
+  // Mostrar los primeros n productos con menor stock
+  cout << "\n\nLos " << n << " productos con menor stock son:\n";
+  temp = head;
+  for (int i = 0; i < n && temp; i++)
+  {
+    cout << temp->nombre << " (Cantidad: " << temp->cantidad << ")\n";
+    temp = temp->siguiente;
+  }
+  cout << "\n";
 }
 
 // Funcion para liberar la memoria de toda la lista enlazada
